@@ -21,6 +21,7 @@ import { AppHeading } from "components/appHeading";
 import { useJettonAddress } from "hooks/useJettonAddress";
 import { useTonAddress } from "@tonconnect/ui-react";
 import { onConnect } from "utils";
+import { uploadIrysImage } from "request/irys";
 
 interface FormProps {
   onSubmit: (values: any) => Promise<void>;
@@ -43,7 +44,7 @@ export function Form({
 }: FormProps) {
   const { showNotification } = useNotification();
   const address = useTonAddress();
-  const { jettonLogo, setIconHover } = useJettonLogo();
+  const { jettonLogo, setIconHover, setLogoUrl } = useJettonLogo();
   const [logoAlertPopup, setLogoAlertPopup] = useState(false);
   const [editLogoPopup, setEditLogoPopup] = useState(false);
   const { jettonAddress } = useJettonAddress();
@@ -73,6 +74,21 @@ export function Form({
 
   const jettonData: any = watch();
 
+  async function submitData() {
+    if (!jettonLogo.logoUrl || !jettonLogo.file || jettonLogo.hasError) {
+      setLogoAlertPopup(true);
+      return;
+    }
+
+    const fileUrl = await uploadIrysImage(jettonLogo.file);
+    setLogoUrl(fileUrl);
+    const values: any = getValues();
+    values.tokenImage = fileUrl;
+    console.log("values", values);
+    //  debugger
+    onSubmit(values);
+  }
+
   useEffect(() => {
     //@ts-ignore
     setValue("tokenImage", jettonLogo.logoUrl);
@@ -81,11 +97,7 @@ export function Form({
   return (
     <StyledForm
       onSubmit={handleSubmit(() => {
-        if (!jettonLogo.logoUrl || jettonLogo.hasError) {
-          setLogoAlertPopup(true);
-          return;
-        }
-        onSubmit(getValues());
+        submitData();
       }, onFormError)}>
       <EditLogoPopup
         showExample={!jettonAddress}

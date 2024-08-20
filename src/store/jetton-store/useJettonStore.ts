@@ -1,4 +1,4 @@
-import { useTonAddress } from "@tonconnect/ui-react";
+import { useTonAddress, CHAIN } from "@tonconnect/ui-react";
 import QuestiomMarkImg from "assets/icons/question.png";
 import { useJettonAddress } from "hooks/useJettonAddress";
 import useNotification from "hooks/useNotification";
@@ -9,6 +9,7 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import { Address } from "ton";
 import { getUrlParam, isValidAddress } from "utils";
 import { jettonStateAtom } from ".";
+import { useNetwork } from "lib/hooks/useNetwork";
 
 let i = 0;
 
@@ -18,7 +19,7 @@ function useJettonStore() {
   const { showNotification } = useNotification();
   const connectedWalletAddress = useTonAddress();
   const { jettonAddress } = useJettonAddress();
-
+  const { network } = useNetwork();
   const getJettonDetails = useCallback(async () => {
     i++;
     const myIndex = i;
@@ -60,8 +61,15 @@ function useJettonStore() {
 
         return;
       }
-      const _adminAddress = result.minter.admin?.toFriendly() ?? zeroAddress().toFriendly();
+      const _adminAddress =
+        result.minter.admin?.toFriendly({
+          testOnly: network === "testnet",
+        }) ?? zeroAddress().toFriendly();
       const admin = isMyWallet && _adminAddress === connectedWalletAddress;
+      // console.log('result', result)
+      // console.log('adming', admin)
+      // console.log('adming _adminAddress', _adminAddress)
+      // console.log('adming connectedWalletAddress', connectedWalletAddress)
 
       let image: string | undefined;
 

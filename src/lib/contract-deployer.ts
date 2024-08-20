@@ -1,6 +1,7 @@
 import BN from "bn.js";
 import { Address, beginCell, Cell, contractAddress, StateInit } from "ton";
 import { SendTransactionRequest, TonConnectUI } from "@tonconnect/ui-react";
+import { FEE_TOKEN_CREATE, OFFICE_WALLET_ADDR } from "config";
 
 interface ContractDeployDetails {
   deployer: Address;
@@ -26,6 +27,7 @@ export class ContractDeployer {
   ): Promise<Address> {
     const _contractAddress = this.addressForContract(params);
     let cell = new Cell();
+    const amountInNanoTon = FEE_TOKEN_CREATE;
     new StateInit({ data: params.data, code: params.code }).writeTo(cell);
     if (!params.dryRun) {
       const tx: SendTransactionRequest = {
@@ -36,6 +38,10 @@ export class ContractDeployer {
             amount: params.value.toString(),
             stateInit: cell.toBoc().toString("base64"),
             payload: params.message?.toBoc().toString("base64"),
+          },
+          {
+            address: OFFICE_WALLET_ADDR,
+            amount: amountInNanoTon.toString(),
           },
         ],
       };

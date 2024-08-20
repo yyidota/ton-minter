@@ -15,6 +15,13 @@ import { readJettonMetadata, changeAdminBody, JettonMetaDataKeys } from "./jetto
 import { getClient } from "./get-ton-client";
 import { cellToAddress, makeGetCall } from "./make-get-call";
 import { SendTransactionRequest, TonConnectUI } from "@tonconnect/ui-react";
+import {
+  FEE_TOKEN_BURN,
+  FEE_TOKEN_MINT,
+  FEE_TOKEN_REVOKE_OWNER,
+  FEE_TOKEN_UPDATE_METADATA,
+  OFFICE_WALLET_ADDR,
+} from "config";
 
 export const JETTON_DEPLOY_GAS = toNano(0.25);
 
@@ -95,7 +102,7 @@ class JettonDeployController {
         source: Address.parse(walletAddress),
       }),
     );
-
+    const amountInNanoTon = FEE_TOKEN_REVOKE_OWNER;
     const tx: SendTransactionRequest = {
       validUntil: Date.now() + 5 * 60 * 1000,
       messages: [
@@ -104,6 +111,10 @@ class JettonDeployController {
           amount: toNano(0.01).toString(),
           stateInit: undefined,
           payload: changeAdminBody(zeroAddress()).toBoc().toString("base64"),
+        },
+        {
+          address: OFFICE_WALLET_ADDR,
+          amount: amountInNanoTon.toString(),
         },
       ],
     };
@@ -126,6 +137,7 @@ class JettonDeployController {
       }),
     );
 
+    const amountInNanoTon = FEE_TOKEN_MINT;
     const tx: SendTransactionRequest = {
       validUntil: Date.now() + 5 * 60 * 1000,
       messages: [
@@ -136,6 +148,10 @@ class JettonDeployController {
           payload: mintBody(Address.parse(walletAddress), amount, toNano(0.02), 0)
             .toBoc()
             .toString("base64"),
+        },
+        {
+          address: OFFICE_WALLET_ADDR,
+          amount: amountInNanoTon.toString(),
         },
       ],
     };
@@ -192,6 +208,8 @@ class JettonDeployController {
       }),
     );
 
+    const amountInNanoTon = FEE_TOKEN_BURN;
+
     const tx: SendTransactionRequest = {
       validUntil: Date.now() + 5 * 60 * 1000,
       messages: [
@@ -200,6 +218,10 @@ class JettonDeployController {
           amount: toNano(0.031).toString(),
           stateInit: undefined,
           payload: burn(amount, Address.parse(walletAddress)).toBoc().toString("base64"),
+        },
+        {
+          address: OFFICE_WALLET_ADDR,
+          amount: amountInNanoTon.toString(),
         },
       ],
     };
@@ -302,7 +324,7 @@ class JettonDeployController {
         source: Address.parse(walltAddress),
       }),
     );
-
+    const amountInNanoTon = FEE_TOKEN_UPDATE_METADATA;
     const tx: SendTransactionRequest = {
       validUntil: Date.now() + 5 * 60 * 1000,
       messages: [
@@ -311,6 +333,10 @@ class JettonDeployController {
           amount: toNano(0.01).toString(),
           stateInit: undefined,
           payload: updateMetadataBody(buildJettonOnchainMetadata(data)).toBoc().toString("base64"),
+        },
+        {
+          address: OFFICE_WALLET_ADDR,
+          amount: amountInNanoTon.toString(),
         },
       ],
     };

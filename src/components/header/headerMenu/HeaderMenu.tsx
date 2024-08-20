@@ -36,13 +36,13 @@ const HeaderMenu: React.FC<MenuProps> = (props) => {
       <div onClick={props.closeMenu}>
         <StyledTonConnectButton />
       </div>
-      <IconButton
+      {/* <IconButton
         sx={{ padding: 0, ml: 1.5 }}
         href="https://github.com/ton-blockchain/minter"
         target="_blank">
         <StyledGithubIcon width={20} height={20} src={githubIcon} />
         <HeaderTypography variant="h5">GitHub</HeaderTypography>
-      </IconButton>
+      </IconButton> */}
     </AppMenu>
   );
 };

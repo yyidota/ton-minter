@@ -29,6 +29,7 @@
     "react-copy-to-clipboard": "^5.1.0",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.0.0",
+    "react-dropzone": "^14.2.3",
     "react-ga": "^3.3.1",
     "react-ga4": "^1.4.1",
     "react-hook-form": "^7.31.3",
@@ -44,8 +45,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build && cp build/index.html build/404.html",
+    "start": "dotenv -e .env react-app-rewired start",
+    "build": "dotenv -e .env react-app-rewired build && cp build/index.html build/404.html",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "deploy": "gh-pages -d build",
@@ -73,6 +74,7 @@
     "@types/bn.js": "^5.1.0",
     "@types/react-copy-to-clipboard": "^5.0.2",
     "customize-cra": "^1.0.0",
+    "dotenv-cli": "^7.4.2",
     "gh-pages": "^4.0.0",
     "husky": "^8.0.0",
     "pretty-quick": "^3.1.3",

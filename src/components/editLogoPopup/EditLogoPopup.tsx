@@ -1,17 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
+import { useDropzone } from "react-dropzone";
 import { AppButton } from "components/appButton";
 import { Popup } from "components/Popup";
-import openLink from "assets/icons/link-open.svg";
-import { useAutosizeTextArea } from "hooks/useAutoResizeTextArea";
-import {
-  LogoTextArea,
-  LogoTextAreaWrapper,
-  PopupContent,
-  PopupDescription,
-  PopupLink,
-  PopupTitle,
-} from "components/editLogoPopup/styled";
+import { PopupContent, PopupDescription, PopupTitle } from "components/editLogoPopup/styled";
 import { useJettonLogo } from "hooks/useJettonLogo";
 
 interface EditLogoPopupProps {
@@ -21,76 +13,61 @@ interface EditLogoPopupProps {
   showExample?: boolean;
 }
 
-export const EditLogoPopup = ({
+export const EditLogoPopup: React.FC<EditLogoPopupProps> = ({
   showPopup,
   tokenImage,
   showExample,
   close,
-}: EditLogoPopupProps) => {
-  const { jettonLogo, setLogoUrl } = useJettonLogo();
-  const [tempUrl, setTempUrl] = useState("");
-  const [inputFocus, setInputFocus] = useState(false);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  useAutosizeTextArea(textAreaRef.current, tempUrl);
+}) => {
+  const { jettonLogo, setLogoUrl, setLogoFile } = useJettonLogo();
+  const [file, setFile] = useState<File | null>(null);
 
-  const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const val = evt.target?.value;
-
-    setTempUrl(val);
+  const onDrop = (acceptedFiles: File[]) => {
+    setFile(acceptedFiles[0]);
   };
 
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
   useEffect(() => {
-    setTempUrl(jettonLogo.logoUrl);
+    setFile(null); // Reset file state when popup is reopened
   }, [showPopup]);
+
+  const handleSave = () => {
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setLogoFile(file);
+      setLogoUrl(fileUrl); // Save the image URL
+      close();
+    }
+  };
 
   return (
     <Popup open={showPopup} onClose={close} maxWidth={644}>
       <PopupTitle>Edit logo</PopupTitle>
       <Box sx={{ width: "100%" }}>
         <PopupContent>
-          <LogoTextAreaWrapper>
-            <LogoTextArea
-              spellCheck={false}
-              onFocus={() => setInputFocus(true)}
-              onBlur={() => setInputFocus(false)}
-              value={tempUrl}
-              onChange={handleChange}
-              ref={textAreaRef}
-              rows={1}
-            />
-          </LogoTextAreaWrapper>
+          <div
+            {...getRootProps()}
+            style={{ border: "2px dashed #0088CC", padding: "20px", cursor: "pointer" }}>
+            <input {...getInputProps()} />
+            {!file ? (
+              <p>Drag 'n' drop an image here, or click to select one</p>
+            ) : (
+              <p>{file.name}</p>
+            )}
+          </div>
         </PopupContent>
-        <PopupDescription>
-          {tokenImage.description}{" "}
-          {showExample && (
-            <span
-              onClick={() => setTempUrl("https://bitcoincash-example.github.io/website/logo.png")}
-              style={{ fontWeight: 700, cursor: "pointer" }}>
-              example
-            </span>
-          )}
-        </PopupDescription>
-        <Box mx={2} mt={!tempUrl ? 0 : 1} sx={{ display: "inline-flex" }}>
-          <PopupLink
-            href="https://github.com/ton-blockchain/minter-contract#jetton-metadata-field-best-practices"
-            target="_blank">
-            Best practices for storing logo
-            <img alt="Open icon" src={openLink} width={11} height={11} style={{ marginLeft: 4 }} />
-          </PopupLink>
-        </Box>
+        <PopupDescription>{tokenImage.description}</PopupDescription>
         <Box>
           <AppButton
-            disabled={!tempUrl}
+            disabled={!file}
             height={44}
             width={118}
             fontWeight={700}
             type="button"
-            onClick={() => {
-              setLogoUrl(tempUrl);
-              close();
-            }}
+            onClick={handleSave}
             background="#0088CC">
-            Save URL
+            Save Image
           </AppButton>
         </Box>
       </Box>

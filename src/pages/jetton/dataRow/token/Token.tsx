@@ -27,6 +27,8 @@ import brokenImage from "assets/icons/question.png";
 import { AppButton } from "components/appButton";
 import pen from "assets/icons/pen.svg";
 import { CenteringWrapper } from "components/footer/styled";
+import { useTonAddress } from "@tonconnect/ui-react";
+import { toUserFriendlyAddress } from "@tonconnect/sdk";
 
 export const Token = () => {
   const {
@@ -47,6 +49,12 @@ export const Token = () => {
     isImageBroken,
   } = useJettonStore();
   const [openEdit, setOpenEdit] = useState(false);
+  // const walletAddress = useTonAddress(false);
+  // const walletAddressFormat = useTonAddress();
+
+  // console.log('no format address', walletAddress)
+  // console.log('no format address>>>',toUserFriendlyAddress(walletAddress, true))
+  // console.log('no format walletAddressFormat', walletAddressFormat)
 
   return (
     <StyledBlock sx={{ width: "calc(55% - 15px)" }}>

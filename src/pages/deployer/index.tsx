@@ -55,7 +55,7 @@ function DeployerPage() {
       );
       decimals = res.decimals;
     }
-
+    console.log("owner", walletAddress);
     const params: JettonDeployParams = {
       owner: Address.parse(walletAddress),
       onchainMetaData: {
@@ -69,6 +69,7 @@ function DeployerPage() {
       amountToMint: toDecimalsBN(data.mintAmount, decimals ?? DEFAULT_DECIMALS),
     };
     setIsLoading(true);
+
     const deployParams = createDeployParams(params, data.offchainUri);
     const contractAddress = new ContractDeployer().addressForContract(deployParams);
 
@@ -123,9 +124,9 @@ function DeployerPage() {
                   inputs={formSpec}
                 />
               </SubHeadingWrapper>
-              <Box sx={{ flex: 4 }}>
+              {/* <Box sx={{ flex: 4 }}>
                 <Description />
-              </Box>
+              </Box> */}
             </FormWrapper>
           </Box>
         </Fade>

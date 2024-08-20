@@ -11,6 +11,7 @@ const defaultState = {
   image: coinLogo,
   isLoading: false,
   hasError: false,
+  file: null,
 };
 
 const jettonLogoState = atom({
@@ -24,6 +25,14 @@ export const useJettonLogo = () => {
   const { jettonAddress } = useJettonAddress();
 
   const resetJetton = () => setJettonLogo(defaultState);
+
+  const setLogoFile = (val: any) =>
+    setJettonLogo((prev) => {
+      return {
+        ...prev,
+        file: val,
+      };
+    });
 
   const setLogoUrl = (val: string) =>
     setJettonLogo((prev) => {
@@ -90,5 +99,5 @@ export const useJettonLogo = () => {
     return () => resetJetton();
   }, [jettonAddress]);
 
-  return { jettonLogo, setLogoUrl, setIconHover, resetJetton };
+  return { jettonLogo, setLogoUrl, setIconHover, resetJetton, setLogoFile };
 };
