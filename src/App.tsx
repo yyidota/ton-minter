@@ -1,6 +1,6 @@
-import { styled } from "@mui/material";
+import { styled, ThemeProvider } from "@mui/material";
 import { Box } from "@mui/system";
-import { createContext, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import { APP_GRID, ROUTES } from "consts";
 import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { DeployerPage, Jetton } from "pages";
@@ -9,6 +9,10 @@ import { Footer } from "components/footer";
 import { Header } from "components/header";
 import { useJettonLogo } from "hooks/useJettonLogo";
 import useNotification from "hooks/useNotification";
+import { lightTheme, darkTheme } from "./theme"; // 引入主题
+import { IntlProvider } from "react-intl";
+import zhCNMessages from "./locales/zh-cn.json";
+import eNMessages from "./locales/en.json";
 
 analytics.init();
 
@@ -80,43 +84,86 @@ const ContentWrapper = ({ children }: ContentWrapperProps) => {
 const App = () => {
   const { resetJetton } = useJettonLogo();
   const location = useLocation();
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme === "dark";
+  });
+
+  const [currentLanguage, setCurrentLanguage] = useState("zh-cn"); // 默认语言设为中文
+
+  const changeLanguage = (language: string) => {
+    setCurrentLanguage(language);
+    localStorage.setItem("language", language); // 持久化语言选择
+  };
 
   useEffect(() => {
     resetJetton();
   }, [location.pathname]);
 
+  const toggleTheme = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    localStorage.setItem("theme", newMode ? "dark" : "light");
+  };
+
+  // 获取用户语言设置
+  const language = currentLanguage;
+  const messages: any = {
+    "zh-cn": zhCNMessages,
+    en: eNMessages,
+    // 其他语言文件
+  };
+
   return (
-    <AppWrapper>
-      <EnvContext.Provider
-        value={{
-          isSandbox: window.location.search.includes("sandbox"),
-          isTestnet: window.location.search.includes("testnet"),
-        }}>
-        <ScreensWrapper>
-          <Routes>
-            <Route
-              path="*"
-              element={
-                <>
-                  <Header />
-                  <Navigate to="/" />
-                  <PageNotFound />
-                </>
-              }
-            />
-            <Route path="/" element={<Header />}>
-              <Route path="/" element={<ContentWrapper />}>
-                <Route path={ROUTES.deployer} element={<DeployerPage />} />
-                <Route path={ROUTES.jettonId} element={<Jetton />} />
-              </Route>
-            </Route>
-          </Routes>
-        </ScreensWrapper>
-      </EnvContext.Provider>
-      <FooterBox mt={5}>
-        <Footer />
-      </FooterBox>
-    </AppWrapper>
+    <IntlProvider locale={language} messages={messages[language] || messages["en"]}>
+      <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+        <AppWrapper>
+          <EnvContext.Provider
+            value={{
+              isSandbox: window.location.search.includes("sandbox"),
+              isTestnet: window.location.search.includes("testnet"),
+            }}>
+            <ScreensWrapper>
+              <Routes>
+                <Route
+                  path="*"
+                  element={
+                    <>
+                      <Header
+                        toggleTheme={toggleTheme}
+                        isDarkMode={isDarkMode}
+                        currentLanguage={currentLanguage}
+                        changeLanguage={changeLanguage}
+                      />
+                      <Navigate to="/" />
+                      <PageNotFound />
+                    </>
+                  }
+                />
+                <Route
+                  path="/"
+                  element={
+                    <Header
+                      toggleTheme={toggleTheme}
+                      isDarkMode={isDarkMode}
+                      currentLanguage={currentLanguage}
+                      changeLanguage={changeLanguage}
+                    />
+                  }>
+                  <Route path="/" element={<ContentWrapper />}>
+                    <Route path={ROUTES.deployer} element={<DeployerPage />} />
+                    <Route path={ROUTES.jettonId} element={<Jetton />} />
+                  </Route>
+                </Route>
+              </Routes>
+            </ScreensWrapper>
+          </EnvContext.Provider>
+          <FooterBox mt={5}>
+            <Footer />
+          </FooterBox>
+        </AppWrapper>
+      </ThemeProvider>
+    </IntlProvider>
   );
 };
 

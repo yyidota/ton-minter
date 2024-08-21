@@ -97,7 +97,7 @@ export function Input({
       />
       <FieldDescription zeroPadding={zeroPadding}>
         {description}
-        {!disabled && !disableExample && (
+        {/* {!disabled && !disableExample && (
           <Typography
             sx={{
               display: "inline",
@@ -111,7 +111,7 @@ export function Input({
             {" "}
             example
           </Typography>
-        )}
+        )} */}
       </FieldDescription>
     </StyledContainer>
   );

@@ -15,14 +15,29 @@ import {
 } from "./styled";
 import { EXAMPLE_ADDRESS } from "consts";
 import { Outlet, useLocation } from "react-router-dom";
+import { useIntl } from "react-intl";
 
-export const Header = () => {
+interface HeaderProps {
+  toggleTheme: () => void;
+  isDarkMode: boolean;
+  currentLanguage: string;
+  changeLanguage: (language: string) => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({
+  toggleTheme,
+  isDarkMode,
+  currentLanguage,
+  changeLanguage,
+}) => {
   const [mobileMenu, setMobileMenu] = useState(false);
   const matches = useMediaQuery("(min-width:900px)");
   const [example, setExample] = useState<string | undefined>(undefined);
 
   const location = useLocation();
   const topRef = useRef<null | HTMLDivElement>(null);
+  const intl = useIntl();
+  const t = (id: any) => intl.formatMessage({ id });
 
   const resetExample = useCallback(() => {
     setExample(undefined);
@@ -43,7 +58,14 @@ export const Header = () => {
               </IconButton>
             )}
             {matches && <AppLogo />}
-            {matches && <HeaderMenu />}
+            {matches && (
+              <HeaderMenu
+                toggleTheme={toggleTheme}
+                isDarkMode={isDarkMode}
+                currentLanguage={currentLanguage}
+                changeLanguage={changeLanguage}
+              />
+            )}
           </HeaderOptionalContent>
           <Box sx={{ width: "100%" }}>
             <SearchBar
@@ -53,15 +75,24 @@ export const Header = () => {
             />
             <HeaderExampleTextWrapper>
               <HeaderExampleText>
-                Enter an existing Jetton contract address.
-                <HeaderExampleLink variant="body2" onClick={() => setExample(EXAMPLE_ADDRESS)}>
+                {t("headerBar.enterJettonAddr")}
+                {intl.formatMessage({ id: "headerBar.enterJettonAddr" })}
+                {intl.formatMessage({ id: "mintToken" })}
+                {/* <HeaderExampleLink variant="body2" onClick={() => setExample(EXAMPLE_ADDRESS)}>
                   {" "}
                   example
-                </HeaderExampleLink>
+                </HeaderExampleLink> */}
               </HeaderExampleText>
             </HeaderExampleTextWrapper>
           </Box>
-          <MobileMenu showMenu={mobileMenu && !matches} closeMenu={() => setMobileMenu(false)} />
+          <MobileMenu
+            showMenu={mobileMenu && !matches}
+            closeMenu={() => setMobileMenu(false)}
+            toggleTheme={toggleTheme}
+            isDarkMode={isDarkMode}
+            currentLanguage={currentLanguage}
+            changeLanguage={changeLanguage}
+          />
         </HeaderContent>
       </HeaderWrapper>
       <Outlet />

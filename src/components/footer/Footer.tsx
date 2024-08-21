@@ -35,20 +35,20 @@ export const Footer = () => {
             hoveredIconUrl={telegramHovered}
             link="https://t.me/+YDnoBue1Dz81ZTMy"
           />
-          <HoverableIcon
+          {/* <HoverableIcon
             iconUrl={github}
             hoveredIconUrl={githubHovered}
             link="https://github.com/ton-blockchain/minter"
-          />
+          /> */}
         </SocialsContent>
       </SocialsWrapper>
       <Separator />
       <CredentialsWrapper>
         <FooterTextBoxLeft>
-          <Typography variant="body2">© 2023 TON Foundation</Typography>
+          {/* <Typography variant="body2">© 2023 TON Foundation</Typography> */}
         </FooterTextBoxLeft>
         <ContributedWrapper>
-          <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+          {/* <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
             Contributed with
             <CenteringWrapper mx={0.4}>
               <img src={heart} alt="Orbs logo" width={12} height={12} />
@@ -63,12 +63,16 @@ export const Footer = () => {
               href="https://orbs.com/">
               Orbs
             </FooterLink>
+          </Typography> */}
+
+          <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+            © 2024 TON SLERFTOOLS
           </Typography>
         </ContributedWrapper>
         <FooterTextBoxRight>
-          <FooterLink target="_blank" href="https://t.me/+YDnoBue1Dz81ZTMy">
+          {/* <FooterLink target="_blank" href="https://t.me/+YDnoBue1Dz81ZTMy">
             <Typography variant="body2">Support</Typography>
-          </FooterLink>
+          </FooterLink> */}
         </FooterTextBoxRight>
       </CredentialsWrapper>
       <Outlet />
