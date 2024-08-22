@@ -75,8 +75,8 @@ const HeaderMenu: React.FC<MenuProps> = (props) => {
         onChange={(event: any) => changeLanguage(event.target.value)}
         displayEmpty
         inputProps={{ "aria-label": "Without label" }}>
-        <StyledMenuItem value="en">English</StyledMenuItem>
-        <StyledMenuItem value="zh-cn">中文</StyledMenuItem>
+        <StyledMenuItem value="en">EN</StyledMenuItem>
+        <StyledMenuItem value="zh-CN">中文</StyledMenuItem>
       </StyledSelect>
     </AppMenu>
   );
@@ -99,7 +99,7 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   color: "#fff", // 文本颜色
   height: 38, // 设置与 TonConnectButton 一致的高度
   borderRadius: theme.shape.borderRadius, // 确保按钮圆角一致
-  padding: "0 16px", // 设置内边距确保内容居中
+  padding: "0 8px", // 设置内边距确保内容居中
   "& .MuiOutlinedInput-notchedOutline": {
     borderColor: theme.palette.primary.main, // 边框颜色与背景色一致
   },

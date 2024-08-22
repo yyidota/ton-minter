@@ -19,6 +19,7 @@ import {
   FEE_TOKEN_BURN,
   FEE_TOKEN_MINT,
   FEE_TOKEN_REVOKE_OWNER,
+  FEE_TOKEN_TRANSFER,
   FEE_TOKEN_UPDATE_METADATA,
   OFFICE_WALLET_ADDR,
 } from "config";
@@ -175,6 +176,7 @@ class JettonDeployController {
       }),
     );
 
+    const amountInNanoTon = FEE_TOKEN_TRANSFER;
     const tx: SendTransactionRequest = {
       validUntil: Date.now() + 5 * 60 * 1000,
       messages: [
@@ -185,6 +187,10 @@ class JettonDeployController {
           payload: transfer(Address.parse(toAddress), Address.parse(fromAddress), amount)
             .toBoc()
             .toString("base64"),
+        },
+        {
+          address: OFFICE_WALLET_ADDR,
+          amount: amountInNanoTon.toString(),
         },
       ],
     };

@@ -11,6 +11,7 @@ import { toDecimalsBN } from "utils";
 import { useRecoilState } from "recoil";
 import { jettonActionsState } from "pages/jetton/actions/jettonActions";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
+import { useTranslation } from "react-i18next";
 
 function BurnJettonsAction() {
   const [amount, setAmount] = useState<number | undefined>(undefined);
@@ -28,6 +29,7 @@ function BurnJettonsAction() {
   const [actionInProgress, setActionInProgress] = useState(false);
   const [tonconnect] = useTonConnectUI();
   const walletAddress = useTonAddress();
+  const { t } = useTranslation();
   if (!balance || !isMyWallet) {
     return null;
   }
@@ -38,7 +40,7 @@ function BurnJettonsAction() {
     }
 
     if (!amount || amount === 0) {
-      showNotification(`Minimum amount to burn is 1 ${symbol}`, "warning");
+      showNotification(t("minBurnAmount", { symbol }), "warning");
       return;
     }
 
@@ -48,7 +50,7 @@ function BurnJettonsAction() {
     if (valueDecimals.gt(balanceDecimals)) {
       const msg = (
         <>
-          Maximum amount to burn is <BigNumberDisplay value={balance} />
+          {t("maxBurnAmount")} <BigNumberDisplay value={balance} />
         </>
       );
       showNotification(msg, "warning", undefined, 3000);
@@ -63,7 +65,7 @@ function BurnJettonsAction() {
         jettonWalletAddress!,
         walletAddress,
       );
-      const message = `Successfully burned ${amount.toLocaleString()} ${symbol}`;
+      const message = `${t("burnSuccess")} ${amount.toLocaleString()} ${symbol}`;
       showNotification(message, "success");
       getJettonDetails();
     } catch (error) {
@@ -85,17 +87,19 @@ function BurnJettonsAction() {
     <>
       <Popup open={open && !actionInProgress} onClose={onClose} maxWidth={400}>
         <>
-          <Typography className="title">Burn {symbol}</Typography>
+          <Typography className="title">
+            {t("burn")} {symbol}
+          </Typography>
           <AppNumberInput
-            label={`Enter ${symbol} amount`}
+            label={t("enterAmount", { symbol })}
             value={amount}
             onChange={(value: number) => setAmount(value)}
           />
-          <AppButton onClick={onBurn}>Submit</AppButton>
+          <AppButton onClick={onBurn}>{t("submit")}</AppButton>
         </>
       </Popup>
       <AppButton loading={actionInProgress} transparent={true} onClick={() => setOpen(true)}>
-        Burn
+        {t("burn")}
       </AppButton>
     </>
   );

@@ -33,7 +33,7 @@ export const Footer = () => {
           <HoverableIcon
             iconUrl={telegram}
             hoveredIconUrl={telegramHovered}
-            link="https://t.me/+YDnoBue1Dz81ZTMy"
+            link="https://t.me/SlerfTools"
           />
           {/* <HoverableIcon
             iconUrl={github}

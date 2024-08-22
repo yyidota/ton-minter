@@ -11,6 +11,7 @@ import { toDecimalsBN } from "utils";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { jettonActionsState } from "pages/jetton/actions/jettonActions";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
+import { useTranslation } from "react-i18next";
 
 export const TransferAction = () => {
   const { balance, symbol, jettonWalletAddress, getJettonDetails, isMyWallet, decimals } =
@@ -22,7 +23,7 @@ export const TransferAction = () => {
   const connectedWalletAddress = useTonAddress();
   const [tonconnect] = useTonConnectUI();
   const [actionInProgress, setActionInProgress] = useRecoilState(jettonActionsState);
-
+  const { t } = useTranslation();
   if (!balance || !jettonWalletAddress || !isMyWallet) {
     return null;
   }
@@ -53,7 +54,7 @@ export const TransferAction = () => {
       setAmount(undefined);
       getJettonDetails();
       showNotification(
-        `Successfully transfered ${amount?.toLocaleString()} ${symbol}`,
+        `${t("transferSuccess")} ${amount?.toLocaleString()} ${symbol}`,
         "warning",
         undefined,
         4000,
@@ -70,7 +71,7 @@ export const TransferAction = () => {
   return (
     <TransferWrapper>
       <AppHeading
-        text={`Transfer ${symbol}`}
+        text={`${t("transfer")} ${symbol}`}
         variant="h4"
         fontWeight={800}
         fontSize={20}
@@ -80,12 +81,12 @@ export const TransferAction = () => {
       <TransferContent>
         <AppTextInput
           fullWidth
-          label="Recipient wallet address"
+          label={t("recipientAddr")}
           value={toAddress}
           onChange={(e) => setToAddress(e.target.value)}
         />
         <AppNumberInput
-          label="Amount to transfer"
+          label={t("transferAmount")}
           onChange={(value: number) => setAmount(value)}
           value={amount}
         />
@@ -96,7 +97,7 @@ export const TransferAction = () => {
           onClick={onSubmit}
           height={50}
           loading={actionInProgress}>
-          Transfer {symbol}
+          {t("transfer")} {symbol}
         </AppButton>
       </ButtonWrapper>
     </TransferWrapper>

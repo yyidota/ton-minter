@@ -13,9 +13,9 @@ const offChainGithubUrl =
 
 export const getFaultyMetadataWarning = (isAdminRevokedOwnership?: boolean) => {
   if (isAdminRevokedOwnership) {
-    return "This token was created with a previous faulty version of the tool. The token is permanently unusable, please contact the admin to redeploy a new token";
+    return "tokenUnusable";
   }
-  return "This token was created with a previous faulty version of the tool. The token is now unusable but can be fixed, please contact the admin to fix it using this page";
+  return "tokenFixable";
 };
 
 export const adminActions = [RevokeOwnershipAction];
@@ -37,20 +37,19 @@ export const getAdminMessage = (
   if (isRevokedOwnership) {
     return {
       type: "success",
-      text: "Ownership is revoked",
+      text: "ownershipRevoked",
     };
   }
   if (isAdmin) {
     return {
       type: "warning",
-      text: `You should revoke this token's ownership. Your ${symbol} tokens will
-          remain safely in your wallet. `,
+      text: `revokeWarning`,
     };
   }
 
   return {
     type: "warning",
-    text: `This token is not 100% safe because admin has not revoked ownership. `,
+    text: `notSafeToken`,
   };
 };
 
@@ -61,19 +60,19 @@ export const getMetadataWarning = (
   if (persistenceType === "onchain" && !adminRevokedOwnership) {
     return {
       type: "warning",
-      text: `This can be changed by the admin without warning.`,
+      text: `adminChangeWarning`,
     };
   }
   switch (persistenceType) {
     case "offchain_ipfs":
       return {
         type: "warning",
-        text: `This jetton’s metadata (name, decimals and symbol) is stored on IPFS instead of on-chain. It will not change, but be careful, it can disappear and become unpinned. `,
+        text: `metadataIPFS`,
       };
     case "offchain_private_domain":
       return {
         type: "warning",
-        text: `Can be changed without warning by admin since metadata is stored on privately owned website. `,
+        text: `metadataWebsite`,
       };
 
     default:
@@ -88,7 +87,7 @@ export const getTotalSupplyWarning = (
   if (persistenceType === "onchain" && !adminRevokedOwnership) {
     return {
       type: "warning",
-      text: `The admin can mint more of this jetton without warning. `,
+      text: `adminMintWarning`,
     };
   }
 };

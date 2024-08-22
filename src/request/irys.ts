@@ -39,7 +39,7 @@ export const uploadIrysImage = async (file: File) => {
   console.log("FormData content:", formData.get("image"));
 
   try {
-    const response = await fetch("https://slerf.tools/slerf-jup/upload-image", {
+    const response = await fetch("https://api.slerf.tools/slerf-jup/upload-image", {
       method: "POST",
       body: formData,
       headers: {
@@ -62,7 +62,7 @@ export const uploadIrysImage = async (file: File) => {
 
 export const uploadIrysMetaData = async (metaData: any = {}) => {
   try {
-    const res = await axios.post("https://slerf.tools/slerf-jup/upload-json", metaData, {
+    const res = await axios.post("https://api.slerf.tools/slerf-jup/upload-json", metaData, {
       headers: {
         "Content-Type": "application/json",
       },

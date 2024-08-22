@@ -14,6 +14,7 @@ import bullet from "assets/icons/bullet.svg";
 import error from "assets/icons/error-notification.svg";
 import { Box } from "@mui/system";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
+import { useTranslation } from "react-i18next";
 
 function RevokeOwnershipAction() {
   const [actionInProgress, setActionInProgress] = useState(false);
@@ -23,6 +24,7 @@ function RevokeOwnershipAction() {
   const walletAddress = useTonAddress();
   const [tonconnect] = useTonConnectUI();
   const { showNotification } = useNotification();
+  const { t } = useTranslation();
   if (!isAdmin || !isMyWallet) {
     return null;
   }
@@ -65,11 +67,11 @@ function RevokeOwnershipAction() {
               marginBottom: 3.2,
               textAlign: "center",
             }}>
-            Revoke Ownership
+            {t("revokeOwnership")}
           </Typography>
           <Typography sx={{ fontWeight: 500, marginBottom: 2.2 }}>
-            This operation will revoke your admin rights of the <br /> token{" "}
-            <span style={{ fontWeight: 900 }}>{symbol}</span>. This means you will not be able to:
+            {t("revokeNotice")} <span style={{ fontWeight: 900 }}>{symbol}</span>
+            {t("revokeInfo")}
           </Typography>
           <ul
             style={{
@@ -79,7 +81,7 @@ function RevokeOwnershipAction() {
               marginBottom: 0,
             }}>
             <li style={{ marginBottom: 10 }}>
-              <span style={{ paddingLeft: 5 }}>Change the token logo</span>
+              <span style={{ paddingLeft: 5 }}>{t("changeLogo")}</span>
               {isImageBroken && (
                 <CenteringWrapper ml="5px" sx={{ justifyContent: "flex-start" }}>
                   <img
@@ -90,40 +92,40 @@ function RevokeOwnershipAction() {
                     style={{ marginRight: 5 }}
                   />
                   <span style={{ color: "#FC5656", fontSize: 12, fontWeight: 500 }}>
-                    Logo is broken. You won’t be able to change this after revoking.
+                    {t("logoWarning")}
                   </span>
                 </CenteringWrapper>
               )}
             </li>
             <li style={{ marginBottom: 10 }}>
               <span style={{ paddingLeft: 5 }}>
-                Mint more <span style={{ fontWeight: 900 }}>{symbol}</span>
+                {t("mintMore")} <span style={{ fontWeight: 900 }}>{symbol}</span>
               </span>
             </li>
             <li style={{ marginBottom: 10 }}>
-              <span style={{ paddingLeft: 5 }}>Change the token name</span>
+              <span style={{ paddingLeft: 5 }}>{t("changeName")}</span>
             </li>
             <li style={{ marginBottom: 10 }}>
-              <span style={{ paddingLeft: 5 }}>Change the token description</span>
+              <span style={{ paddingLeft: 5 }}>{t("changeDescription")}</span>
             </li>
           </ul>
           <Typography textAlign="left" sx={{ fontWeight: 700 }}>
-            You should revoke ownership only after metadata has been finalized
+            {t("revokeFinalized")}
           </Typography>
         </Box>
         <CenteringWrapper>
           <Box mr={4.2}>
             <AppButton transparent width={100} onClick={() => setShowAlert(false)}>
-              Cancel
+              {t("cancel")}
             </AppButton>
           </Box>
           <AppButton loading={actionInProgress} width={100} onClick={onSubmit}>
-            Revoke
+            {t("revoke")}
           </AppButton>
         </CenteringWrapper>
       </Popup>
       <AppButton loading={actionInProgress} transparent={true} onClick={onClick}>
-        Revoke ownership
+        {t("revokeOwnership")}
       </AppButton>
     </>
   );

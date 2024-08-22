@@ -23,6 +23,7 @@ import { Form } from "components/form";
 import { GithubButton } from "pages/deployer/githubButton";
 import { useNavigatePreserveQuery } from "lib/hooks/useNavigatePreserveQuery";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
+import { useTranslation } from "react-i18next";
 
 const DEFAULT_DECIMALS = 9;
 
@@ -42,6 +43,7 @@ function DeployerPage() {
   const [tonconnect] = useTonConnectUI();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigatePreserveQuery();
+  const { t } = useTranslation();
 
   async function deployContract(data: any) {
     if (!walletAddress || !tonconnect) {
@@ -78,9 +80,9 @@ function DeployerPage() {
     if (isDeployed) {
       showNotification(
         <>
-          Contract already deployed,{" "}
+          {t("contractAlreadydeployed")}{" "}
           <ReactRouterLink to={`${ROUTES.jetton}/${Address.normalize(contractAddress)}/`}>
-            View contract
+            {t("viewContract")}
           </ReactRouterLink>
         </>,
         "warning",
@@ -91,11 +93,11 @@ function DeployerPage() {
 
     try {
       const result = await jettonDeployController.createJetton(params, tonconnect, walletAddress);
-      analytics.sendEvent(
-        AnalyticsCategory.DEPLOYER_PAGE,
-        AnalyticsAction.DEPLOY,
-        contractAddress.toFriendly(),
-      );
+      // analytics.sendEvent(
+      //   AnalyticsCategory.DEPLOYER_PAGE,
+      //   AnalyticsAction.DEPLOY,
+      //   contractAddress.toFriendly(),
+      // );
 
       navigate(`${ROUTES.jetton}/${Address.normalize(result)}`);
     } catch (err) {
@@ -113,13 +115,13 @@ function DeployerPage() {
         <Fade in>
           <Box>
             <Box mb={3} mt={3.75}>
-              <ScreenHeading variant="h5">Mint your token</ScreenHeading>
+              <ScreenHeading variant="h5">{t("mintToken")}</ScreenHeading>
             </Box>
             <FormWrapper>
               <SubHeadingWrapper>
                 <Form
                   isLoading={isLoading}
-                  submitText="Deploy"
+                  submitText={t("deploy")}
                   onSubmit={deployContract}
                   inputs={formSpec}
                 />

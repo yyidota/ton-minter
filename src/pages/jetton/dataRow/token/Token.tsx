@@ -29,6 +29,7 @@ import pen from "assets/icons/pen.svg";
 import { CenteringWrapper } from "components/footer/styled";
 import { useTonAddress } from "@tonconnect/ui-react";
 import { toUserFriendlyAddress } from "@tonconnect/sdk";
+import { useTranslation } from "react-i18next";
 
 export const Token = () => {
   const {
@@ -49,6 +50,7 @@ export const Token = () => {
     isImageBroken,
   } = useJettonStore();
   const [openEdit, setOpenEdit] = useState(false);
+  const { t } = useTranslation();
   // const walletAddress = useTonAddress(false);
   // const walletAddressFormat = useTonAddress();
 
@@ -84,7 +86,7 @@ export const Token = () => {
                 <Tooltip arrow title={description && description?.length > 80 ? description : ""}>
                   <Box marginTop=".5px" sx={{ maxWidth: 300, maxHeight: 60 }}>
                     <AppHeading
-                      text={description || "Description"}
+                      text={description || t("description")}
                       limitText={80}
                       variant="h4"
                       fontWeight={500}
@@ -106,7 +108,7 @@ export const Token = () => {
                       height={15}
                       style={{ marginRight: 4 }}
                     />
-                    Edit token
+                    {t("editToken")}
                   </CenteringWrapper>
                 </AppButton>
               </Box>
@@ -119,17 +121,17 @@ export const Token = () => {
           )}
           <StyledCategoryFields>
             <DataRow
-              description="On-chain smart contract address of the Jetton parent (jetton-minter.fc)"
-              title="Address"
+              description={t("jettonParent")}
+              title={t("address")}
               value={jettonMaster}
               dataLoading={jettonLoading}
               address={jettonMaster}
             />
             <DataRow
-              title="Admin"
-              value={adminRevokedOwnership ? "Empty address" : adminAddress}
+              title={t("admin")}
+              value={adminRevokedOwnership ? t("emptyAddr") : adminAddress}
               address={adminAddress}
-              description="Account address that can mint tokens freely and change metadata"
+              description={t("mintingAccount")}
               message={getAdminMessage(
                 jettonWalletAddress,
                 symbol,
@@ -144,19 +146,19 @@ export const Token = () => {
               regularAddress
             />
             <DataRow
-              title="Symbol"
+              title={t("symbol")}
               value={symbol}
               dataLoading={jettonLoading}
               message={getMetadataWarning(persistenceType, adminRevokedOwnership)}
             />
             <DataRow
-              title="Decimals"
+              title={t("decimals")}
               value={decimals}
               dataLoading={jettonLoading}
               message={getMetadataWarning(persistenceType, adminRevokedOwnership)}
             />
             <DataRow
-              title="Total Supply"
+              title={t("totalSupply")}
               value={
                 totalSupply && (
                   <>

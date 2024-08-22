@@ -13,6 +13,7 @@ import { AppNumberInput } from "components/appInput";
 import { useRecoilState } from "recoil";
 import { jettonActionsState } from "pages/jetton/actions/jettonActions";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
+import { useTranslation } from "react-i18next";
 
 function MintJettonsAction() {
   const [amount, setAmount] = useState<number | undefined>(undefined);
@@ -23,6 +24,7 @@ function MintJettonsAction() {
     useJettonStore();
   const walletAddress = useTonAddress();
   const { showNotification } = useNotification();
+  const { t } = useTranslation();
 
   if (!isAdmin || !isMyWallet) {
     return null;
@@ -34,7 +36,12 @@ function MintJettonsAction() {
     }
 
     if (!amount || amount === 0) {
-      showNotification(`Minimum amount of ${symbol} to mint is 1`, "warning");
+      showNotification(
+        t("minMintAmount", {
+          symbol: symbol,
+        }),
+        "warning",
+      );
       return;
     }
     const value = toDecimalsBN(amount, decimals!);
@@ -50,7 +57,7 @@ function MintJettonsAction() {
       setOpen(false);
       const message = (
         <>
-          Successfully minted <BigNumberDisplay value={amount} /> {symbol}
+          {t("mintSuccess")} <BigNumberDisplay value={amount} /> {symbol}
         </>
       );
       getJettonDetails();
@@ -75,17 +82,21 @@ function MintJettonsAction() {
     <>
       <Popup open={open && !actionInProgress} onClose={onClose} maxWidth={400}>
         <>
-          <Typography className="title">Mint {symbol}</Typography>
+          <Typography className="title">
+            {t("mint")} {symbol}
+          </Typography>
           <AppNumberInput
-            label={`Enter ${symbol} amount`}
+            label={t("enterAmount", {
+              symbol,
+            })}
             value={amount}
             onChange={(value: number) => setAmount(value)}
           />
-          <AppButton onClick={onMint}>Submit</AppButton>
+          <AppButton onClick={onMint}>{t("submit")}</AppButton>
         </>
       </Popup>
       <AppButton loading={actionInProgress} transparent={true} onClick={() => setOpen(true)}>
-        Mint
+        {t("mint")}
       </AppButton>
     </>
   );

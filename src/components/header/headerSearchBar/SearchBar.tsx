@@ -6,6 +6,7 @@ import { Backdrop, ClickAwayListener, IconButton } from "@mui/material";
 import { AppButton } from "components/appButton";
 import { HeaderSearchResults } from "components/header/headerSearchResults";
 import { useAddressHistory } from "hooks/useAddressHistory";
+import { useTranslation } from "react-i18next";
 
 interface SearchBarProps {
   closeMenu?: () => void;
@@ -24,6 +25,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ example, resetExample, clo
     setValue,
     addressInput,
   } = useAddressHistory();
+  const { t } = useTranslation();
 
   const onAddressRemove = (e: any, address: string) => {
     e.stopPropagation();
@@ -62,7 +64,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ example, resetExample, clo
             <img src={SearchImg} width={18} height={18} alt="Search Icon" />
           </IndentlessIcon>
           <SearchBarInput
-            placeholder="Jetton address"
+            placeholder={t("searchBar.jettonAddr")}
             onPaste={(e: any) => setValue(e.target.value)}
             onChange={(e) => setValue(e.target.value)}
             value={addressInput.value}
@@ -81,7 +83,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ example, resetExample, clo
                   onSubmit(addressInput.value);
                   closeMenu?.();
                 }}>
-                Go
+                {t("searchBar.go")}
               </AppButton>
             </>
           )}

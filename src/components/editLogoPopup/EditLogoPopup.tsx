@@ -5,6 +5,7 @@ import { AppButton } from "components/appButton";
 import { Popup } from "components/Popup";
 import { PopupContent, PopupDescription, PopupTitle } from "components/editLogoPopup/styled";
 import { useJettonLogo } from "hooks/useJettonLogo";
+import { useTranslation } from "react-i18next";
 
 interface EditLogoPopupProps {
   showPopup: boolean;
@@ -21,6 +22,7 @@ export const EditLogoPopup: React.FC<EditLogoPopupProps> = ({
 }) => {
   const { jettonLogo, setLogoUrl, setLogoFile } = useJettonLogo();
   const [file, setFile] = useState<File | null>(null);
+  const { t } = useTranslation();
 
   const onDrop = (acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -43,21 +45,17 @@ export const EditLogoPopup: React.FC<EditLogoPopupProps> = ({
 
   return (
     <Popup open={showPopup} onClose={close} maxWidth={644}>
-      <PopupTitle>Edit logo</PopupTitle>
+      <PopupTitle>{t("editLogo")}</PopupTitle>
       <Box sx={{ width: "100%" }}>
         <PopupContent>
           <div
             {...getRootProps()}
             style={{ border: "2px dashed #0088CC", padding: "20px", cursor: "pointer" }}>
             <input {...getInputProps()} />
-            {!file ? (
-              <p>Drag 'n' drop an image here, or click to select one</p>
-            ) : (
-              <p>{file.name}</p>
-            )}
+            {!file ? <p>{t("dragDropImage")}</p> : <p>{file.name}</p>}
           </div>
         </PopupContent>
-        <PopupDescription>{tokenImage.description}</PopupDescription>
+        <PopupDescription>{t(tokenImage.description)}</PopupDescription>
         <Box>
           <AppButton
             disabled={!file}
@@ -67,7 +65,7 @@ export const EditLogoPopup: React.FC<EditLogoPopupProps> = ({
             type="button"
             onClick={handleSave}
             background="#0088CC">
-            Save Image
+            {t("saveImage")}
           </AppButton>
         </Box>
       </Box>

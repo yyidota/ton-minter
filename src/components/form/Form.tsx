@@ -22,6 +22,7 @@ import { useJettonAddress } from "hooks/useJettonAddress";
 import { useTonAddress } from "@tonconnect/ui-react";
 import { onConnect } from "utils";
 import { uploadIrysImage } from "request/irys";
+import { useTranslation } from "react-i18next";
 
 interface FormProps {
   onSubmit: (values: any) => Promise<void>;
@@ -71,6 +72,7 @@ export function Form({
   const closeEditLogoPopup = useCallback(() => setEditLogoPopup(false), []);
 
   const closeAlertLogoPopup = useCallback(() => setLogoAlertPopup(false), []);
+  const { t } = useTranslation();
 
   const jettonData: any = watch();
 
@@ -140,7 +142,7 @@ export function Form({
         </CenteringWrapper>
         <Box ml={3}>
           <JettonFormTitle>
-            {jettonData?.name || "Jetton name"} ({jettonData?.symbol || "Symbol"})
+            {jettonData?.name || t("jettonName")} ({jettonData?.symbol || t("symbol")})
           </JettonFormTitle>
           <Tooltip
             arrow
@@ -151,7 +153,7 @@ export function Form({
             }>
             <Box sx={{ maxWidth: 300, maxHeight: 60 }}>
               <AppHeading
-                text={jettonData.description || "Description"}
+                text={jettonData.description || t("description")}
                 limitText={80}
                 variant="h4"
                 fontWeight={500}
@@ -171,18 +173,18 @@ export function Form({
               <Input
                 disableExample={disableExample}
                 required={spec.required}
-                description={spec.description}
+                description={t(spec.description)}
                 clearErrors={clearErrors}
                 key={index}
                 error={errors[spec.name]}
                 name={spec.name}
                 type={spec.type}
                 control={control}
-                label={spec.label}
+                label={t(spec.label)}
                 defaultValue={spec.default || ""}
                 onExampleClick={() => onExampleClick(spec.name as never, spec.default as never)}
                 disabled={spec.disabled}
-                errorMessage={spec.errorMessage}
+                errorMessage={t(spec.errorMessage)}
                 validate={spec.validate}
                 showDefault={spec.showDefault}
               />
@@ -198,7 +200,7 @@ export function Form({
             type="button"
             onClick={onConnect}
             background="#0088CC">
-            Connect wallet
+            {t("connectWallet")}
           </AppButton>
         ) : (
           <CenteringWrapper sx={{ justifyContent: "center" }}>
@@ -209,7 +211,7 @@ export function Form({
                   transparent
                   onClick={onCancel}
                   type="button">
-                  Cancel
+                  {t("cancel")}
                 </AppButton>
               </Box>
             )}

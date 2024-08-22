@@ -8,6 +8,7 @@ import recentSearch from "assets/icons/recent-search.svg";
 import { IconButton, Typography } from "@mui/material";
 import close from "assets/icons/close.svg";
 import { AppButton } from "components/appButton";
+import { useTranslation } from "react-i18next";
 
 interface HeaderSearchResultsProps {
   searchResults: string[];
@@ -22,6 +23,7 @@ export const HeaderSearchResults: React.FC<HeaderSearchResultsProps> = ({
   onItemDelete,
   onHistoryClear,
 }) => {
+  const { t } = useTranslation();
   return (
     <SearchResultsWrapper>
       {searchResults.map((result) => (
@@ -39,7 +41,7 @@ export const HeaderSearchResults: React.FC<HeaderSearchResultsProps> = ({
       ))}
       <CenteringWrapper mt={2} mb={1} ml={1} sx={{ width: "fit-content" }}>
         <AppButton onClick={onHistoryClear} height={34} transparent>
-          Clear History
+          {t("searchBar.clearHistory")}
         </AppButton>
       </CenteringWrapper>
     </SearchResultsWrapper>

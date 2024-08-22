@@ -15,7 +15,7 @@ import {
 } from "./styled";
 import { EXAMPLE_ADDRESS } from "consts";
 import { Outlet, useLocation } from "react-router-dom";
-import { useIntl } from "react-intl";
+import { useTranslation } from "react-i18next";
 
 interface HeaderProps {
   toggleTheme: () => void;
@@ -36,8 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const location = useLocation();
   const topRef = useRef<null | HTMLDivElement>(null);
-  const intl = useIntl();
-  const t = (id: any) => intl.formatMessage({ id });
+  const { t } = useTranslation();
 
   const resetExample = useCallback(() => {
     setExample(undefined);
@@ -76,8 +75,6 @@ export const Header: React.FC<HeaderProps> = ({
             <HeaderExampleTextWrapper>
               <HeaderExampleText>
                 {t("headerBar.enterJettonAddr")}
-                {intl.formatMessage({ id: "headerBar.enterJettonAddr" })}
-                {intl.formatMessage({ id: "mintToken" })}
                 {/* <HeaderExampleLink variant="body2" onClick={() => setExample(EXAMPLE_ADDRESS)}>
                   {" "}
                   example

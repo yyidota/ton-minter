@@ -10,6 +10,7 @@ import { useSetRecoilState } from "recoil";
 import { jettonActionsState } from "pages/jetton/actions/jettonActions";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const inputsName = ["name", "symbol", "decimals", "tokenImage", "description"];
 
@@ -51,6 +52,7 @@ function UpdateMetadata({ setOpen }: UpdateMetadataProps) {
   const { showNotification } = useNotification();
   const [tonconnect] = useTonConnectUI();
   const walltAddress = useTonAddress();
+  const { t } = useTranslation();
   if (!isAdmin) {
     return null;
   }
@@ -90,7 +92,7 @@ function UpdateMetadata({ setOpen }: UpdateMetadataProps) {
 
   return (
     <Form
-      submitText="Save"
+      submitText={t("save")}
       disableExample={true}
       onSubmit={onSubmit}
       inputs={inputs}

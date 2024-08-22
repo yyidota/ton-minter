@@ -11,16 +11,18 @@ import { Box, Link } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
 import { CenteringWrapper } from "components/header/headerSearchBar/styled";
 import { CheckWalletBalancePopup } from "components/checkWalletBalancePopup";
+import { useTranslation } from "react-i18next";
 
 export const Wallet = () => {
   const { balance, symbol, jettonLoading, selectedWalletAddress, decimals } = useJettonStore();
   const [params, setParams] = useSearchParams();
   const [showPopup, setShowPopup] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <StyledBlock sx={{ width: "calc(45% - 15px)" }}>
       <AppHeading
-        text={`${!params.get("address") ? "Connected" : ""} Jetton wallet`}
+        text={`${!params.get("address") ? t("connected") : ""} ${t("jettonWallet")}`}
         variant="h4"
         fontWeight={800}
         fontSize={20}
@@ -29,24 +31,24 @@ export const Wallet = () => {
       />
       <StyledCategoryFields>
         <DataRow
-          title="Wallet Address"
+          title={t("walletAddress")}
           value={selectedWalletAddress}
           dataLoading={jettonLoading}
           address={selectedWalletAddress}
           regularAddress
-          description="Connected wallet public address, can be shared to receive jetton transfers"
+          description={t("connectedWalletPublicAddress")}
           children={
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <CheckWalletBalancePopup showPopup={showPopup} close={() => setShowPopup(false)} />
-              Wallet Address
+              {t("walletAddress")}
               <CenteringWrapper>
                 {!!params.get("address") ? (
                   <Link sx={{ cursor: "pointer" }} onClick={() => setParams("")}>
-                    Cancel
+                    {t("cancel")}
                   </Link>
                 ) : (
                   <Link sx={{ cursor: "pointer" }} onClick={() => setShowPopup(true)}>
-                    View different wallet balance
+                    {t("viewDifferentWalletBalance")}
                   </Link>
                 )}
               </CenteringWrapper>
@@ -54,7 +56,7 @@ export const Wallet = () => {
           }
         />
         <DataRow
-          title="Wallet Balance"
+          title={t("walletBalance")}
           value={
             balance && (
               <>
@@ -64,7 +66,7 @@ export const Wallet = () => {
           }
           dataLoading={jettonLoading}
           actions={balanceActions}
-          description="Number of tokens in connected wallet that can be transferred to others"
+          description={t("walletTokenCount")}
         />
         <TransferAction />
       </StyledCategoryFields>
