@@ -2,7 +2,7 @@ import { styled, ThemeProvider } from "@mui/material";
 import { Box } from "@mui/system";
 import { createContext, useEffect, useState } from "react";
 import { APP_GRID, ROUTES } from "consts";
-import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { DeployerPage, Jetton } from "pages";
 import analytics from "services/analytics";
 import { Footer } from "components/footer";
@@ -12,6 +12,8 @@ import useNotification from "hooks/useNotification";
 import { lightTheme, darkTheme } from "./theme";
 import "./i18n"; // 引入 i18n 配置
 import { useTranslation } from "react-i18next";
+import RouterView from "router";
+import { setStorageLng } from "i18n/storage";
 
 // analytics.init();
 
@@ -83,30 +85,55 @@ const ContentWrapper = ({ children }: ContentWrapperProps) => {
 const App = () => {
   const { resetJetton } = useJettonLogo();
   const location = useLocation();
-  const { i18n } = useTranslation(); // 获取 i18n 实例
+  const navigate = useNavigate();
+  const { i18n } = useTranslation();
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
     return savedTheme === "dark";
   });
 
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language); // 获取当前语言
+  const [currentLanguage, setCurrentLanguage] = useState(`${i18n.language}`.toLocaleLowerCase());
 
-  const changeLanguage = (language: string) => {
-    setCurrentLanguage(language);
-    i18n.changeLanguage(language); // 切换语言
-    localStorage.setItem("language", language); // 持久化语言选择
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng); // 更改 i18n 的语言
+    const currentPath = location.pathname;
+    const newPath = currentPath.replace(/^\/[^\/]+/, `/${lng}`); // 替换路径中的语言部分
+    setStorageLng(lng);
+    setCurrentLanguage(lng);
+    navigate(newPath, { replace: true }); // 导航到新的地址，不添加历史记录
   };
 
-  useEffect(() => {
-    resetJetton();
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   const pathSegments = location.pathname.split('/');
+  //   const detectedLang = pathSegments[1];
+
+  //   // 如果没有检测到语言或语言不在支持的语言列表中，则重定向到默认语言
+  //   if (!detectedLang || !i18n.languages.includes(detectedLang)) {
+  //     const defaultLanguage = 'en'; // 默认语言设置为 'en'
+  //     i18n.changeLanguage(defaultLanguage);
+  //     const newPath = `/${defaultLanguage}${location.pathname}`;
+
+  //     // 确保路径不同才进行跳转，避免死循环
+  //     if (newPath !== location.pathname) {
+  //       navigate(newPath, { replace: true });
+  //     }
+  //   } else if (detectedLang !== i18n.language) {
+  //     // 如果路径中的语言与 i18n 当前语言不一致，更新语言
+  //     i18n.changeLanguage(detectedLang);
+  //     setCurrentLanguage(detectedLang);
+  //   }
+  // }, [location.pathname, i18n.language, navigate]);
 
   const toggleTheme = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
     localStorage.setItem("theme", newMode ? "dark" : "light");
   };
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
 
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
@@ -117,38 +144,13 @@ const App = () => {
             isTestnet: window.location.search.includes("testnet"),
           }}>
           <ScreensWrapper>
-            <Routes>
-              <Route
-                path="*"
-                element={
-                  <>
-                    <Header
-                      toggleTheme={toggleTheme}
-                      isDarkMode={isDarkMode}
-                      currentLanguage={currentLanguage}
-                      changeLanguage={changeLanguage}
-                    />
-                    <Navigate to="/" />
-                    <PageNotFound />
-                  </>
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <Header
-                    toggleTheme={toggleTheme}
-                    isDarkMode={isDarkMode}
-                    currentLanguage={currentLanguage}
-                    changeLanguage={changeLanguage}
-                  />
-                }>
-                <Route path="/" element={<ContentWrapper />}>
-                  <Route path={ROUTES.deployer} element={<DeployerPage />} />
-                  <Route path={ROUTES.jettonId} element={<Jetton />} />
-                </Route>
-              </Route>
-            </Routes>
+            <Header
+              toggleTheme={toggleTheme}
+              isDarkMode={isDarkMode}
+              currentLanguage={currentLanguage}
+              changeLanguage={changeLanguage}
+            />
+            <RouterView />
           </ScreensWrapper>
         </EnvContext.Provider>
         <FooterBox mt={5}>

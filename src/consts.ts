@@ -1,8 +1,8 @@
 import { getNetwork } from "./lib/hooks/useNetwork";
 const ROUTES = {
-  deployer: "/",
-  jetton: "/jetton",
-  jettonId: "/jetton/:id",
+  deployer: "ton-token-creator",
+  jetton: "jetton",
+  jettonId: "jetton/:id",
 };
 
 const APP_GRID = 1156;

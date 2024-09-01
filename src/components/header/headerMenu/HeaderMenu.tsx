@@ -52,6 +52,8 @@ const MobileMenu: React.FC<MenuProps> = ({
 
 const HeaderMenu: React.FC<MenuProps> = (props) => {
   const { toggleTheme, isDarkMode, currentLanguage, changeLanguage } = props;
+
+  console.log("currentLanguage", currentLanguage);
   return (
     <AppMenu>
       <div onClick={props.closeMenu}>
@@ -75,8 +77,8 @@ const HeaderMenu: React.FC<MenuProps> = (props) => {
         onChange={(event: any) => changeLanguage(event.target.value)}
         displayEmpty
         inputProps={{ "aria-label": "Without label" }}>
-        <StyledMenuItem value="en">EN</StyledMenuItem>
-        <StyledMenuItem value="zh-CN">中文</StyledMenuItem>
+        <StyledMenuItem value="en-us">EN</StyledMenuItem>
+        <StyledMenuItem value="zh-cn">中文</StyledMenuItem>
       </StyledSelect>
     </AppMenu>
   );
